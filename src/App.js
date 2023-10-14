@@ -8,8 +8,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       cards: [
-        { front: 'front1', back: 'back1' },
-        { front: 'front2', back: 'back2' }
+        { front: 'front', back: 'back', starred: false }
       ],
       editor: true
     }
@@ -26,7 +25,26 @@ class App extends React.Component {
     this.setState({ cards });
   };
 
-  switchMode = () => this.setState({editor: !this.state.editor});
+  starCard = index => {
+    const cards = this.state.cards.slice();
+    cards[index].starred = !cards[index].starred;
+    this.setState({ cards });
+  }
+
+  changeCard = (index, name, value) => {
+    const cards = this.state.cards.slice();
+    if(name === "front") {
+      cards[index].front = value;
+    } else  {
+      cards[index].back = value;
+    }
+    this.setState({ cards });
+  }
+
+  switchMode = () => {
+    if(this.state.cards.length == 0) return;
+    this.setState({editor: !this.state.editor});
+  };
 
   render() {
     if(this.state.editor)  {
@@ -35,10 +53,15 @@ class App extends React.Component {
         deleteCard={this.deleteCard}
         cards={this.state.cards}
         switchMode={this.switchMode}
+        changeCard={this.changeCard}
+        starCard={this.starCard}
       />;
     } else  {
       return <CardViewer 
         switchMode={this.switchMode}
+        nextCard={this.nextCard}
+        cards={this.state.cards}
+        starCard={this.starCard}
       />;
     }
   }

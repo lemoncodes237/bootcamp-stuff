@@ -1,0 +1,35 @@
+.card {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 300px;
+    height: 300px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 1000px;
+}
+
+.starredCard {
+    background: #edfd9f;
+    border: 1px solid #999;
+    float: left;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 300px;
+    height: 300px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 1000px;
+}
+
+.card-view:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
