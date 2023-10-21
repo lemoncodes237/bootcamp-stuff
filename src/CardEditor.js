@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './CardEditor.css'
 import React from 'react';
 
+import {Link} from 'react-router-dom';
+
 class CardEditor extends React.Component {
     constructor(props)  {
         super(props);
@@ -80,6 +82,8 @@ class CardEditor extends React.Component {
 
         const invalidCard = this.state.invalid ? (<>&nbsp; Invalid Card</>) : (<></>);
 
+        const toViewer = this.props.cards.length === 0 ? (<></>) : (<Link to="/viewer">Go to card viewer</Link>);
+
         return (
             <div>
                 <h2>Card Editor</h2>
@@ -110,7 +114,7 @@ class CardEditor extends React.Component {
 
                 {invalidCard}
                 <hr/>
-                <button onClick={this.props.switchMode}>Go to Card Viewer</button>
+                {toViewer}
             </div>
         );
     }
