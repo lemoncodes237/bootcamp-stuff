@@ -2,24 +2,21 @@ import logo from './logo.svg';
 import React from 'react';
 import './CardViewer.css';
 
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
+import {firebaseConnect,isLoaded,isEmpty} from 'react-redux-firebase';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 
 class CardViewer extends React.Component {
     constructor(props)  {
         super(props);
-        const order = [];
-        for(let i = 0; i < props.cards.length; i++)  {
-            order[i] = i;
-        }
+
         this.escFunction = this.escFunction.bind(this);
 
         this.state = { 
-            front: this.props.cards[0].front, 
-            back: this.props.cards[0].back, 
             flipped: false, 
-            text: this.props.cards[0].front, 
             index: 0,
-            order: order,
+            order: null,
             starOnly: false
         };
     }
@@ -32,7 +29,19 @@ class CardViewer extends React.Component {
         } else if(event.key === "ArrowLeft") {
             this.changeCard(this.state.index-1);
         } else if(event.key === "s" || event.key === "S")  {
-            this.props.starCard(this.state.order[this.state.index]);
+            //console.log("Hi");
+            //this.props.cards[this.state.order[this.state.index]]['starred'] = !this.props.cards[this.state.order[this.state.index]]['starred'];
+            const newStar = !this.props.cards[this.state.order[this.state.index]]['starred'];
+            /*starCard = index =>  {
+                const cards = this.state.cards.slice();
+                cards[index]['starred'] = !cards[index]['starred'];
+                this.setState({ cards });
+            };
+            this.props.starCard(this.state.order[this.state.index]);*/
+
+            const deckId = this.props.match.params.deckId;
+
+            this.props.firebase.ref('/flashcards/' + deckId + '/cards/' + this.state.order[this.state.index]).update({'starred':newStar});
         }
     }
     componentDidMount(){
@@ -43,7 +52,7 @@ class CardViewer extends React.Component {
     }
 
     flip = () => {
-       this.setState({flipped: !this.state.flipped, text: this.state.flipped ? this.state.front : this.state.back });
+       this.setState({flipped: !this.state.flipped });
     };
 
     changeCard = index => {
@@ -52,9 +61,6 @@ class CardViewer extends React.Component {
         }
         this.setState({
             flipped: false,
-            front: this.props.cards[this.state.order[index]].front,
-            back: this.props.cards[this.state.order[index]].back,
-            text: this.props.cards[this.state.order[index]].front,
             index
         });
     };
@@ -98,52 +104,100 @@ class CardViewer extends React.Component {
             if(numStarred === 0) return;
         }
 
-        this.setState({index: 0, order, front:this.props.cards[order[0]].front,
-            back:this.props.cards[order[0]].back, text:this.props.cards[order[0]].front, starOnly: !this.state.starOnly});
+        this.setState({index: 0, order, starOnly: !this.state.starOnly});
     };
 
     resetOrder = () => {
         const order = this.state.order.slice();
         order.sort();
-        this.setState({index: 0, order, front:this.props.cards[this.state.order[0]].front,
-            back:this.props.cards[this.state.order[0]].back, text:this.props.cards[this.state.order[0]].front});
+        this.setState({index: 0, order});
     };
+
+    componentDidUpdate(prevProps) {
+        if (this.props.cards !== prevProps.cards) {
+            let order = [];
+            for(let i = 0; i < this.props.cards.length; i++)  {
+                order[i] = i;
+            }
+            this.setState({ index: 0, order });
+        }
+    }
 
     render() {
 
-        let card;
-        if(this.props.cards[this.state.order[this.state.index]].starred)  {
-            card = (<button className="starredCard" onClick={this.flip}>{this.state.text}</button>);
-        } else  { 
-            card = (
-            <button className="card"
-            onClick={this.flip}>
-                {this.state.text}
-            </button>);
+        if(!isLoaded(this.props.cards))  {
+            return <div>Loading...</div>;
         }
+
+        if(isEmpty(this.props.cards))  {
+            return <div>Page not found</div>;
+        }
+
+        let order = [];
+
+        if(!this.state.order)  {
+            for(let i = 0; i < this.props.cards.length; i++)  {
+                order[i] = i;
+            }
+        } else  {
+            order = this.state.order.slice();
+        }
+        let card;
+        /*if(this.props.cards[this.state.order[this.state.index]].starred)  {
+            card = (<button className="starredCard" onClick={this.flip}>{this.state.text}</button>);
+        } else  { */
+        if(!this.state.flipped)  {
+            if(this.props.cards[order[this.state.index]]['starred'])  {
+                card = (
+                    <button className="starredCard"
+                    onClick={this.flip}>
+                        {this.props.cards[order[this.state.index]]['front']}
+                    </button>);
+            } else  {
+                card = (
+                <button className="card"
+                onClick={this.flip}>
+                    {this.props.cards[order[this.state.index]]['front']}
+                </button>);
+            }
+        } else  {
+            if(this.props.cards[order[this.state.index]]['starred'])  {
+                card = (
+                    <button className="starredCard"
+                    onClick={this.flip}>
+                        {this.props.cards[order[this.state.index]]['back']}
+                    </button>);
+            } else  {
+                card = (
+                <button className="card"
+                onClick={this.flip}>
+                    {this.props.cards[order[this.state.index]]['back']}
+                </button>);
+            }
+        }
+        //}
 
         let starText = this.state.starOnly ? "All Terms" : "Only Starred Terms";
 
         return (
             
             <div>
-                <h2>Card Viewer</h2>
+                <h2>{this.props.name}</h2>
                 <div className="card-view">
                     {card}
                 </div>
 
                 <button onClick={() => {this.changeCard(this.state.index-1)} }>Previous</button>
                 <button onClick={() => {this.changeCard(this.state.index+1)} }>Next</button>
-                &nbsp; Card {this.state.index + 1} / {this.state.order.length}
+                &nbsp; Card {this.state.index + 1} / {order.length}
 
                 <br/>
 
                 <hr/>
 
                 <button onClick={() => {
-                    const newOrder = this.shuffle(this.state.order);
-                    this.setState({index: 0, order: newOrder, front:this.props.cards[newOrder[0]].front,
-                        back:this.props.cards[newOrder[0]].back, text:this.props.cards[newOrder[0]].front});
+                    const newOrder = this.shuffle(order);
+                    this.setState({index: 0, order: newOrder});
                 } }>Randomize</button>
 
                 <button onClick={this.resetOrder}>Normal Order</button>
@@ -152,10 +206,29 @@ class CardViewer extends React.Component {
                 
                 <hr/>
 
-                <Link to="/editor">Go to card editor</Link>
+                <Link to="/">Home</Link>
             </div>
         );
     }
 }
 
-export default CardViewer;
+const mapStateToProps = (state,props) => {
+    const deck = state.firebase.data[props.match.params.deckId];
+    const name = deck && deck.name;
+    const cards = deck && deck.cards;
+    return { cards: cards, name: name };
+};
+
+export default compose(
+    withRouter,
+
+    firebaseConnect(props => {
+        const deckId = props.match.params.deckId;
+        
+        return [
+            {path: '/flashcards/' + deckId, storeAs: deckId}
+        ]
+    }),
+    
+    connect(mapStateToProps)
+)(CardViewer);

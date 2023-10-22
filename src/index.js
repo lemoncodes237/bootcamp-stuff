@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import {
