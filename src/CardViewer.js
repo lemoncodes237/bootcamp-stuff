@@ -114,7 +114,8 @@ class CardViewer extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.cards !== prevProps.cards) {
+        if (this.props.cards !== prevProps.cards && !this.state.order) {
+
             let order = [];
             for(let i = 0; i < this.props.cards.length; i++)  {
                 order[i] = i;
