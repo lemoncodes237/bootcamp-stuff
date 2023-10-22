@@ -17,7 +17,8 @@ class CardViewer extends React.Component {
             flipped: false, 
             index: 0,
             order: null,
-            starOnly: false
+            starOnly: false,
+            orderLoaded: false
         };
     }
 
@@ -114,13 +115,13 @@ class CardViewer extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.cards !== prevProps.cards && !this.state.order) {
-
+        if (this.props.cards !== prevProps.cards && !this.state.orderLoaded) {
             let order = [];
             for(let i = 0; i < this.props.cards.length; i++)  {
                 order[i] = i;
             }
-            this.setState({ index: 0, order });
+            
+            this.setState({ order, orderLoaded: true });
         }
     }
 
