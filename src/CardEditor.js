@@ -37,7 +37,7 @@ class CardEditor extends React.Component {
         this.setState({front: this.state.front.trim(), back: this.state.back.trim()});
 
         if(!this.state.front.trim() | !this.state.back.trim())  {
-            this.setState({front: '', back: '', invalid: true});
+            this.setState({invalid: true});
             return;
         }
 
@@ -91,7 +91,7 @@ class CardEditor extends React.Component {
 
             return (
                 <tr key={index}>
-                    <td>{index + 1}</td>
+                    <td className="lightbluecolor">{index + 1}</td>
                     <td><input
                     name="front"
                     onChange={this.changeCard(index)}
@@ -119,11 +119,17 @@ class CardEditor extends React.Component {
 
         const invalidCard = this.state.invalid ? (<>&nbsp; Invalid Card</>) : (<></>);
 
+        let possClass = "";
+
+        if(this.state.invalid)  {
+            possClass = "bad_text";
+        }
+
         return (
             <div>
                 <h2 className="twovw">Card Editor</h2>
                 <div>
-                    <text>Deck name:{' '}</text>
+                    <span>Deck name:{' '}</span>
                     <input 
                         name='name'
                         onChange={this.handleChange} 
@@ -135,11 +141,11 @@ class CardEditor extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                            <th>Index</th>
-                            <th>Front</th>
-                            <th>Back</th>
-                            <th>Delete</th>
-                            <th>Star</th>
+                            <th style={{background: "lightblue"}}>Index</th>
+                            <th style={{background: "lightblue"}}>Front</th>
+                            <th style={{background: "lightblue"}}>Back</th>
+                            <th style={{background: "lightblue"}}>Delete</th>
+                            <th style={{background: "lightblue"}}>Star</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,11 +155,15 @@ class CardEditor extends React.Component {
                 <br/>
                 <input 
                 name="front"
-                onChange={this.handleChange} placeholder="Front of card" value={this.state.front} />
+                onChange={this.handleChange} placeholder="Front of card" value={this.state.front} className={possClass} />
+
+                &nbsp;
                 
                 <input 
                 name="back"
-                onChange={this.handleChange} placeholder="Back of card" value={this.state.back} />
+                onChange={this.handleChange} placeholder="Back of card" value={this.state.back} className={possClass} />
+
+                &nbsp;
                 
                 <button onClick={this.addCard}>Add Card</button>
 

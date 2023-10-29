@@ -1,3 +1,7 @@
+body {
+    font-family: Arial;
+}
+
 table,
 td,
 th {
@@ -31,15 +35,23 @@ button {
 }
 
 .twovw {
-    font-size: 2vw
+    font-size: 2vw;
 }
 
-text {
+span {
     font-size: 1vw
 }
 
 .onevw {
     font-size: 1vw
+}
+
+.lightbluecolor {
+    background: rgb(212, 244, 255)
+}
+
+.bad_text {
+    background: lightcoral
 }
 
 @media screen and (max-width: 600px) {
@@ -71,6 +83,10 @@ text {
     }
     
     .onevw {
+        font-size: 4vw
+    }
+
+    span {
         font-size: 4vw
     }
 }

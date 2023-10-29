@@ -19,7 +19,8 @@ class CardViewer extends React.Component {
             index: 0,
             order: null,
             starOnly: false,
-            orderLoaded: false
+            orderLoaded: false,
+            currCard: null
         };
     }
 
@@ -42,6 +43,10 @@ class CardViewer extends React.Component {
             const deckId = this.props.match.params.deckId;
 
             this.props.firebase.ref('/flashcards/' + deckId + '/cards/' + this.state.order[this.state.index]).update({'starred':newStar});
+
+            this.updateCard(this.state.order, this.state.index, this.state.flipped, false, true, newStar);
+        } else if(event.key === " ")  {
+            this.flip();
         }
     }
     componentDidMount(){
@@ -51,9 +56,9 @@ class CardViewer extends React.Component {
         document.removeEventListener("keydown", this.escFunction, false);
     }
 
-    flip = (card) => {
+    flip = () => {
        this.setState({flipped: !this.state.flipped });
-       card.target.classList.toggle('flipped');
+       this.updateCard(this.state.order, this.state.index, !this.state.flipped);
     };
 
     changeCard = index => {
@@ -64,6 +69,8 @@ class CardViewer extends React.Component {
             flipped: false,
             index
         });
+
+        this.updateCard(this.state.order, index, false, true);
     };
 
     shuffle = array => {
@@ -80,7 +87,7 @@ class CardViewer extends React.Component {
         }
       
         return newArray;
-      };
+    };
 
     starFlip = () => {
         const order = [];
@@ -106,12 +113,16 @@ class CardViewer extends React.Component {
         }
 
         this.setState({index: 0, order, starOnly: !this.state.starOnly});
+
+        this.updateCard(order, 0, false);
     };
 
     resetOrder = () => {
         const order = this.state.order.slice();
         order.sort();
         this.setState({index: 0, order});
+
+        this.updateCard(order, 0, false);
     };
 
     componentDidUpdate(prevProps) {
@@ -121,11 +132,42 @@ class CardViewer extends React.Component {
             for(let i = 0; i < this.props.cards.length; i++)  {
                 order[i] = i;
             }
-
-            console.log("Order reset");
             
             this.setState({ order, orderLoaded: true });
+
+            this.updateCard(order, 0, false);
         }
+    }
+    
+    updateCard = (order, index, flipped, moving, checkStar, starred) => {
+        if(!isLoaded(this.props.cards))  {
+            return;
+        }
+        let classes = "card";
+        if(checkStar)  {
+            if(starred)  {
+                classes = classes + " starredCard";
+            }
+        } else if(this.props.cards[order[index]]['starred'])  {
+            classes = classes + " starredCard";
+        }
+        if(flipped)  {
+            classes = classes + " reverse";
+        }
+        if(moving)  {
+            classes = classes + " quickchange";
+        }
+        let currCard = (
+            <div className={classes} onClick={this.flip}>
+                <div className="card-front">
+                    {this.props.cards[order[index]]['front']}
+                </div>
+                <div className="card-back">
+                    {this.props.cards[order[index]]['back']}
+                </div>
+            </div>
+        )
+        this.setState({currCard});
     }
 
     render() {
@@ -147,10 +189,7 @@ class CardViewer extends React.Component {
         } else  {
             order = this.state.order.slice();
         }
-        let card;
-        /*if(this.props.cards[this.state.order[this.state.index]].starred)  {
-            card = (<button className="starredCard" onClick={this.flip}>{this.state.text}</button>);
-        } else  { */
+        /*let card;
 
         let classes = "card";
         if(this.props.cards[order[this.state.index]]['starred'])  {
@@ -169,7 +208,7 @@ class CardViewer extends React.Component {
                     {this.props.cards[order[this.state.index]]['back']}
                 </div>
             </div>
-        )
+        )*/
 
 
         /*if(!this.state.flipped)  {
@@ -261,12 +300,14 @@ class CardViewer extends React.Component {
             <div>
                 <h2 className="twovw">{this.props.name}</h2>
                 <div className="card-view">
-                    {card}
+                    {this.state.currCard}
                 </div>
+
+                <br/>
 
                 <button onClick={() => {this.changeCard(this.state.index-1)} }>Previous</button>
                 <button onClick={() => {this.changeCard(this.state.index+1)} }>Next</button>
-                &nbsp; <text>Card {this.state.index + 1} / {order.length}</text>
+                &nbsp; <span>Card {this.state.index + 1} / {order.length}</span>
 
                 <br/>
 
@@ -275,6 +316,7 @@ class CardViewer extends React.Component {
                 <button onClick={() => {
                     const newOrder = this.shuffle(order);
                     this.setState({index: 0, order: newOrder, flipped: false });
+                    this.updateCard(newOrder, 0, false, true);
                 } }>Randomize</button>
 
                 <button onClick={this.resetOrder}>Normal Order</button>
