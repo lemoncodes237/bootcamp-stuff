@@ -1,7 +1,6 @@
 import logo from './logo.svg';
 import './CardEditor.css'
 import React from 'react';
-import './main.css'
 
 import {Link,withRouter} from 'react-router-dom';
 import {firebaseConnect} from 'react-redux-firebase';
