@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import React from 'react';
 import './CardViewer.css';
+import './CardEditor.css';
 
 import {Link,withRouter} from 'react-router-dom';
 import {firebaseConnect,isLoaded,isEmpty} from 'react-redux-firebase';
@@ -23,9 +24,7 @@ class CardViewer extends React.Component {
     }
 
     escFunction(event){
-        if (event.key === " ") {
-            this.flip();
-        } else if(event.key === "ArrowRight") {
+        if(event.key === "ArrowRight") {
             this.changeCard(this.state.index+1);
         } else if(event.key === "ArrowLeft") {
             this.changeCard(this.state.index-1);
@@ -52,8 +51,9 @@ class CardViewer extends React.Component {
         document.removeEventListener("keydown", this.escFunction, false);
     }
 
-    flip = () => {
+    flip = (card) => {
        this.setState({flipped: !this.state.flipped });
+       card.target.classList.toggle('flipped');
     };
 
     changeCard = index => {
@@ -115,11 +115,14 @@ class CardViewer extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
+        // Check that the state array isn't initialized yet
         if (this.props.cards !== prevProps.cards && !this.state.orderLoaded) {
             let order = [];
             for(let i = 0; i < this.props.cards.length; i++)  {
                 order[i] = i;
             }
+
+            console.log("Order reset");
             
             this.setState({ order, orderLoaded: true });
         }
@@ -128,7 +131,7 @@ class CardViewer extends React.Component {
     render() {
 
         if(!isLoaded(this.props.cards))  {
-            return <div>Loading...</div>;
+            return <div>No one is ever gonna read this. So why do I bother? Uhh fun fact: I once ordered lemon slices at McDonald's</div>;
         }
 
         if(isEmpty(this.props.cards))  {
@@ -148,10 +151,82 @@ class CardViewer extends React.Component {
         /*if(this.props.cards[this.state.order[this.state.index]].starred)  {
             card = (<button className="starredCard" onClick={this.flip}>{this.state.text}</button>);
         } else  { */
-        if(!this.state.flipped)  {
+
+        let classes = "card";
+        if(this.props.cards[order[this.state.index]]['starred'])  {
+            classes = classes + " starredCard";
+        }
+        if(this.state.flipped)  {
+            classes = classes + " reverse";
+        }
+
+        card = (
+            <div className={classes} onClick={this.flip}>
+                <div className="card-front">
+                    {this.props.cards[order[this.state.index]]['front']}
+                </div>
+                <div className="card-back">
+                    {this.props.cards[order[this.state.index]]['back']}
+                </div>
+            </div>
+        )
+
+
+        /*if(!this.state.flipped)  {
             if(this.props.cards[order[this.state.index]]['starred'])  {
                 card = (
-                    <button className="starredCard"
+                    <div className="card starredCard" onClick={this.flip}>
+                        <div className="card-front">
+                            {this.props.cards[order[this.state.index]]['front']}
+                        </div>
+                        <div className="card-back">
+                            {this.props.cards[order[this.state.index]]['back']}
+                        </div>
+                    </div>
+                )
+            } else  {
+                card = (
+                    <div className="card" onClick={this.flip}>
+                        <div className="card-front">
+                            {this.props.cards[order[this.state.index]]['front']}
+                        </div>
+                        <div className="card-back">
+                            {this.props.cards[order[this.state.index]]['back']}
+                        </div>
+                    </div>
+                )
+            }
+
+        } else  {
+            if()  {
+                card = (
+                    <div className="card reverse" onClick={this.flip}>
+                        <div className="card-front">
+                            {this.props.cards[order[this.state.index]]['front']}
+                        </div>
+                        <div className="card-back">
+                            {this.props.cards[order[this.state.index]]['back']}
+                        </div>
+                    </div>
+                )
+            } else  {
+                card = (
+                    <div className="card reverse" onClick={this.flip}>
+                        <div className="card-front">
+                            {this.props.cards[order[this.state.index]]['front']}
+                        </div>
+                        <div className="card-back">
+                            {this.props.cards[order[this.state.index]]['back']}
+                        </div>
+                    </div>
+                )
+            }
+        }*/
+
+        /*if(!this.state.flipped)  {
+            if(this.props.cards[order[this.state.index]]['starred'])  {
+                card = (
+                    <button className="card starredCard"
                     onClick={this.flip}>
                         {this.props.cards[order[this.state.index]]['front']}
                     </button>);
@@ -165,18 +240,18 @@ class CardViewer extends React.Component {
         } else  {
             if(this.props.cards[order[this.state.index]]['starred'])  {
                 card = (
-                    <button className="starredCard"
+                    <button className="card starredCard reverse"
                     onClick={this.flip}>
                         {this.props.cards[order[this.state.index]]['back']}
                     </button>);
             } else  {
                 card = (
-                <button className="card"
+                <button className="card reverse"
                 onClick={this.flip}>
                     {this.props.cards[order[this.state.index]]['back']}
                 </button>);
             }
-        }
+        }*/
         //}
 
         let starText = this.state.starOnly ? "All Terms" : "Only Starred Terms";
@@ -184,14 +259,14 @@ class CardViewer extends React.Component {
         return (
             
             <div>
-                <h2>{this.props.name}</h2>
+                <h2 className="twovw">{this.props.name}</h2>
                 <div className="card-view">
                     {card}
                 </div>
 
                 <button onClick={() => {this.changeCard(this.state.index-1)} }>Previous</button>
                 <button onClick={() => {this.changeCard(this.state.index+1)} }>Next</button>
-                &nbsp; Card {this.state.index + 1} / {order.length}
+                &nbsp; <text>Card {this.state.index + 1} / {order.length}</text>
 
                 <br/>
 
@@ -199,7 +274,7 @@ class CardViewer extends React.Component {
 
                 <button onClick={() => {
                     const newOrder = this.shuffle(order);
-                    this.setState({index: 0, order: newOrder});
+                    this.setState({index: 0, order: newOrder, flipped: false });
                 } }>Randomize</button>
 
                 <button onClick={this.resetOrder}>Normal Order</button>
@@ -208,7 +283,7 @@ class CardViewer extends React.Component {
                 
                 <hr/>
 
-                <Link to="/">Home</Link>
+                <Link to="/" className="onevw">Home</Link>
             </div>
         );
     }

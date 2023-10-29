@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './CardEditor.css'
 import React from 'react';
+import './main.css'
 
 import {Link,withRouter} from 'react-router-dom';
 import {firebaseConnect} from 'react-redux-firebase';
@@ -121,9 +122,9 @@ class CardEditor extends React.Component {
 
         return (
             <div>
-                <h2>Card Editor</h2>
+                <h2 className="twovw">Card Editor</h2>
                 <div>
-                    Deck name:{' '}
+                    <text>Deck name:{' '}</text>
                     <input 
                         name='name'
                         onChange={this.handleChange} 
@@ -168,7 +169,7 @@ class CardEditor extends React.Component {
 
                 <br/>
             
-                <Link to="/">Home</Link>
+                <Link to="/" className="onevw">Home</Link>
             </div>
         );
     }

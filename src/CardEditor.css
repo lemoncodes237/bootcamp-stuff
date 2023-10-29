@@ -10,9 +10,67 @@ table {
 
 td,
 th {
+    font-size: 1vw;
     padding: 10px;
 }
 
 .star {
     background: #edfd9f;
+}
+
+td {
+    font-size: 1vw
+}
+
+input {
+    font-size: 0.9vw;
+}
+
+button {
+    font-size: 0.9vw
+}
+
+.twovw {
+    font-size: 2vw
+}
+
+text {
+    font-size: 1vw
+}
+
+.onevw {
+    font-size: 1vw
+}
+
+@media screen and (max-width: 600px) {
+    td,
+    th {
+        font-size: 4vw;
+        padding: 10px;
+    }
+
+    td {
+        font-size: 4vw;
+    }
+
+    input {
+        font-size: 3.6vw;
+        width: 100%;
+    }
+    
+    button {
+        font-size: 3.6vw
+    }
+    
+    .twovw {
+        font-size: 6vw
+    }
+    
+    text {
+        font-size: 4vw
+    }
+    
+    .onevw {
+        font-size: 4vw
+    }
 }
