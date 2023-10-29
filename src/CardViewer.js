@@ -30,15 +30,7 @@ class CardViewer extends React.Component {
         } else if(event.key === "ArrowLeft") {
             this.changeCard(this.state.index-1);
         } else if(event.key === "s" || event.key === "S")  {
-            //console.log("Hi");
-            //this.props.cards[this.state.order[this.state.index]]['starred'] = !this.props.cards[this.state.order[this.state.index]]['starred'];
             const newStar = !this.props.cards[this.state.order[this.state.index]]['starred'];
-            /*starCard = index =>  {
-                const cards = this.state.cards.slice();
-                cards[index]['starred'] = !cards[index]['starred'];
-                this.setState({ cards });
-            };
-            this.props.starCard(this.state.order[this.state.index]);*/
 
             const deckId = this.props.match.params.deckId;
 
@@ -189,109 +181,6 @@ class CardViewer extends React.Component {
         } else  {
             order = this.state.order.slice();
         }
-        /*let card;
-
-        let classes = "card";
-        if(this.props.cards[order[this.state.index]]['starred'])  {
-            classes = classes + " starredCard";
-        }
-        if(this.state.flipped)  {
-            classes = classes + " reverse";
-        }
-
-        card = (
-            <div className={classes} onClick={this.flip}>
-                <div className="card-front">
-                    {this.props.cards[order[this.state.index]]['front']}
-                </div>
-                <div className="card-back">
-                    {this.props.cards[order[this.state.index]]['back']}
-                </div>
-            </div>
-        )*/
-
-
-        /*if(!this.state.flipped)  {
-            if(this.props.cards[order[this.state.index]]['starred'])  {
-                card = (
-                    <div className="card starredCard" onClick={this.flip}>
-                        <div className="card-front">
-                            {this.props.cards[order[this.state.index]]['front']}
-                        </div>
-                        <div className="card-back">
-                            {this.props.cards[order[this.state.index]]['back']}
-                        </div>
-                    </div>
-                )
-            } else  {
-                card = (
-                    <div className="card" onClick={this.flip}>
-                        <div className="card-front">
-                            {this.props.cards[order[this.state.index]]['front']}
-                        </div>
-                        <div className="card-back">
-                            {this.props.cards[order[this.state.index]]['back']}
-                        </div>
-                    </div>
-                )
-            }
-
-        } else  {
-            if()  {
-                card = (
-                    <div className="card reverse" onClick={this.flip}>
-                        <div className="card-front">
-                            {this.props.cards[order[this.state.index]]['front']}
-                        </div>
-                        <div className="card-back">
-                            {this.props.cards[order[this.state.index]]['back']}
-                        </div>
-                    </div>
-                )
-            } else  {
-                card = (
-                    <div className="card reverse" onClick={this.flip}>
-                        <div className="card-front">
-                            {this.props.cards[order[this.state.index]]['front']}
-                        </div>
-                        <div className="card-back">
-                            {this.props.cards[order[this.state.index]]['back']}
-                        </div>
-                    </div>
-                )
-            }
-        }*/
-
-        /*if(!this.state.flipped)  {
-            if(this.props.cards[order[this.state.index]]['starred'])  {
-                card = (
-                    <button className="card starredCard"
-                    onClick={this.flip}>
-                        {this.props.cards[order[this.state.index]]['front']}
-                    </button>);
-            } else  {
-                card = (
-                <button className="card"
-                onClick={this.flip}>
-                    {this.props.cards[order[this.state.index]]['front']}
-                </button>);
-            }
-        } else  {
-            if(this.props.cards[order[this.state.index]]['starred'])  {
-                card = (
-                    <button className="card starredCard reverse"
-                    onClick={this.flip}>
-                        {this.props.cards[order[this.state.index]]['back']}
-                    </button>);
-            } else  {
-                card = (
-                <button className="card reverse"
-                onClick={this.flip}>
-                    {this.props.cards[order[this.state.index]]['back']}
-                </button>);
-            }
-        }*/
-        //}
 
         let starText = this.state.starOnly ? "All Terms" : "Only Starred Terms";
 

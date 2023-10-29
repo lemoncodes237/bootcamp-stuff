@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import React from 'react';
+import './Home.css';
 
 import {Link} from 'react-router-dom';
 import {firebaseConnect,isLoaded} from 'react-redux-firebase';
@@ -23,7 +24,10 @@ class Homepage extends React.Component {
             return (
                 <div key={key}>
                     <Link to={path}>
-                    {this.props.pages[key]['name']}
+                        <div className="select_card">
+                            <div className="select_card-front">{this.props.pages[key]['name']}</div>
+                            <div className="select_card-back">{this.props.pages[key]['name']}</div>
+                        </div>
                     </Link>
                     <br/>
                 </div>
@@ -37,11 +41,21 @@ class Homepage extends React.Component {
 
         return (
             <div>
-                <h2>Homepage</h2>
-                <Link to="/editor">Create new flashcard</Link>
+                <div className="header">Datamatch Comp-let (Totally not a plagiarized Quizlet nope)</div>
                 <br/>
-                <h3>Flashcards</h3>
-                {allCards}
+
+                <div className="center">
+                <Link to="/editor" className="fiftypercent">
+                    <div className="select_card editor_card">
+                        <div className="select_card-front editor_card_side">Create new flashcard</div>
+                        <div className="select_card-back editor_card_side">Create new flashcard</div>
+                    </div>
+                </Link>
+                </div>
+
+                <br/>
+                <div className="header2">Flashcards</div>
+                <div className="grid-container">{allCards}</div>
             </div>
         );
     }
