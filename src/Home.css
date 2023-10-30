@@ -40,17 +40,10 @@
 }
 
 .select_card {
-    float: left;
     font-weight: bold;
-    /*font-size: 30px;
-    line-height: 300px;
-    height: 300px;
-    width: 1000px;*/
     width: 100%;
     height: 200px;
     line-height: 200px;
-    margin-right: -1px;
-    margin-top: -1px;
     padding: 0;
     text-align: center;
     transition: transform 0.8s;
@@ -67,43 +60,67 @@
     position:relative;
     justify-content:center;
     align-items:center;
+    text-align: center;
 }
 
 .fiftypercent {
     width: 50%;
+    text-align: center;
 }
 
 .editor_card {
+    font-weight: bold;
     width: 100%;
     height: 250px;
     line-height: 250px;
-    margin: 0 auto;
-    padding: 10px;
-    position: relative;
-    justify-content:center;
-    align-items:center;
-    background: rgb(186, 242, 198)
+    padding: 0;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    border: 1px solid black;
+    background: rgb(186, 242, 198);
 }
 
 .select_card:hover {
     transform: rotateY(180deg);
 }
 
+.editor_card:hover {
+    transform: rotateY(180deg);
+}
+
 
 .select_card-front, .select_card-back {
-    margin: 0 auto;
     position: absolute;
-    font-size: 1vw;
+    font-size: 1.5vw;
     text-align: center;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
 }
-
-.editor_card_side {
-    font-size: 2vw;
-}
-
 .select_card-back {
     transform: rotateY(180deg);
+}
+
+.editor_card-front, .editor_card-back {
+    position: absolute;
+    font-size: 2vw;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+.editor_card-back {
+    transform: rotateY(180deg);
+}
+
+@media screen and (max-width: 600px) {
+    .select_card-front, .select_card-back {
+        font-size: 2vw;
+        text-align: center;
+    }
+
+    .editor_card-front, .editor_card-back {
+        font-size: 4vw;
+    }
 }

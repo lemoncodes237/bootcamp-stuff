@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './CardEditor.css'
 import React from 'react';
 

@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React from 'react';
 import './Home.css';
 
@@ -46,9 +45,9 @@ class Homepage extends React.Component {
 
                 <div className="center">
                 <Link to="/editor" className="fiftypercent">
-                    <div className="select_card editor_card">
-                        <div className="select_card-front editor_card_side">Create new flashcard</div>
-                        <div className="select_card-back editor_card_side">Create new flashcard</div>
+                    <div className="editor_card">
+                        <div className="editor_card-front">Create new flashcard</div>
+                        <div className="editor_card-back">Create new flashcard</div>
                     </div>
                 </Link>
                 </div>
