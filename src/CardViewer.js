@@ -1,6 +1,7 @@
 import React from 'react';
 import './CardViewer.css';
 import './CardEditor.css';
+import './Home.css';
 
 import {Link,withRouter} from 'react-router-dom';
 import {firebaseConnect,isLoaded,isEmpty} from 'react-redux-firebase';
@@ -134,7 +135,7 @@ class CardViewer extends React.Component {
         if(!isLoaded(this.props.cards))  {
             return;
         }
-        let classes = "card";
+        let classes = "card hundredpercent";
         if(checkStar)  {
             if(starred)  {
                 classes = classes + " starredCard";
@@ -186,34 +187,47 @@ class CardViewer extends React.Component {
         return (
             
             <div>
-                <h2 className="twovw">{this.props.name}</h2>
-                <div className="card-view">
-                    {this.state.currCard}
+                <div className="centerviewer bgheader">
+                    <div className="onefivevw">{this.props.name}</div>
+                    <div className="break"></div>
+                    <div className="onevw">Card {this.state.index + 1} / {order.length}</div>
+                </div>
+                <br/>
+                <div className="center">
+                    <div className="fiftypercent">
+                        {this.state.currCard}
+                    </div>
+                    <div className="break"></div>
+                    <button onClick={() => {this.changeCard(this.state.index-1)} }>←</button>
+                    <div className="horizontalgap" style={{width:"10px"}}></div>
+                    <button onClick={() => {this.changeCard(this.state.index+1)} }>→</button>
                 </div>
 
                 <br/>
 
-                <button onClick={() => {this.changeCard(this.state.index-1)} }>Previous</button>
-                <button onClick={() => {this.changeCard(this.state.index+1)} }>Next</button>
-                &nbsp; <span>Card {this.state.index + 1} / {order.length}</span>
-
-                <br/>
-
                 <hr/>
 
-                <button onClick={() => {
-                    const newOrder = this.shuffle(order);
-                    this.setState({index: 0, order: newOrder, flipped: false });
-                    this.updateCard(newOrder, 0, false, true);
-                } }>Randomize</button>
+                <div className="center smallheight">
 
-                <button onClick={this.resetOrder}>Normal Order</button>
+                    <button onClick={() => {
+                        const newOrder = this.shuffle(order);
+                        this.setState({index: 0, order: newOrder, flipped: false });
+                        this.updateCard(newOrder, 0, false, true);
+                    } }>Shuffle</button>
 
-                <button onClick={this.starFlip}>{starText}</button>
+                    <div className="horizontalgap" style={{width:"10px"}}></div>
+
+                    <button onClick={this.resetOrder}>Normal Order</button>
+
+                    <div className="horizontalgap" style={{width:"10px"}}></div>
+
+                    <button onClick={this.starFlip}>{starText}</button>
+
+                </div>
                 
                 <hr/>
 
-                <Link to="/" className="onevw">Home</Link>
+                <Link to="/" className="onevw">Back to Home</Link>
             </div>
         );
     }
